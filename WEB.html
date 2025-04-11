@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Info Togel Hari Ini</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+      padding: 50px;
+      color: white;
+    }
+
+    .kotak {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1, h2 {
+      color: #fff;
+    }
+
+    .hasil {
+      font-size: 24px;
+      color: #f1c40f;
+      margin-top: 20px;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #27ae60;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #2ecc71;
+    }
+
+    .prediksi-angka {
+      font-size: 24px;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .kotak {
+        width: 90%;
+        padding: 15px;
+      }
+
+      h1, .hasil, .prediksi-angka {
+        font-size: 18px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="kotak">
+    <h2>Masukkan Result Manual</h2>
+    <input type="text" id="inputResult" placeholder="Contoh: 6789" maxlength="4" pattern="[0-9]{4}" autocomplete="off" />
+    <button type="button" onclick="updateResult()">Simpan</button>
+    <p class="hasil" id="hasilManual">Result: -</p>
+
+    <h1>Info Togel Hari Ini</h1>
+    <p id="tanggal"></p>
+
+    <h2>Prediksi Angka 4D • 3D • 2D</h2>
+    <button onclick="resetSemuaData()" style="background-color:#e74c3c;">Reset Semua Data</button>
+    <button id="btnPrediksi" onclick="prediksiSemua()">Klik Untuk Prediksi</button>
+    <br>
+    <button onclick="navigasiPrediksi(-1)">←</button>
+    <button onclick="navigasiPrediksi(1)">→</button>
+    <p id="indikatorPrediksi" style="margin-top: 10px; font-size: 18px; font-weight: bold; color: #f39c12;"></p>
+
+    <p class="prediksi-angka" id="prediksi4d"></p>
+    <p class="prediksi-angka" id="prediksi3d"></p>
+    <p class="prediksi-angka" id="prediksi2d"></p>
+
+    <p>
+      <button onclick="salinKeClipboard()">📋 Salin ke Clipboard</button>
+      <button onclick="hubungiWhatsappLangsung()">💬 Hubungi WhatsApp</button>
+    </p>
+
+    <a href="https://hajarwd888.site/register?referral_code=savagejp" target="_blank">Link Alternatif Olivia</a>
+  </div> <!-- ✨ Di sini penutupan div nya sudah benar -->
+
+  <script>
+    if (typeof(Storage) === "undefined") {
+      alert("Browser kamu tidak mendukung localStorage. Fitur tidak akan berfungsi.");
+    }
+
+    const today = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById("tanggal").innerText = today.toLocaleDateString('id-ID', options);
+
+    let currentIndex = 0;
+
+    window.onload = function () {
+  const today = new Date();
+  const tanggalKey = today.toISOString().split('T')[0]; // format: YYYY-MM-DD
+
+  document.getElementById("tanggal").innerText = today.toLocaleDateString('id-ID', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  const savedResult = localStorage.getItem("resultManual");
+  if (savedResult) {
+    document.getElementById("hasilManual").innerText = "Result: " + savedResult;
+    document.getElementById("inputResult").value = savedResult;
+  }
+
+  let prediksiData = JSON.parse(localStorage.getItem("prediksiHarian") || "{}");
+
+  if (prediksiData[tanggalKey]) {
+    tampilkanPrediksi(prediksiData[tanggalKey]);
+  } else {
+    const angka4D = Math.floor(1000 + Math.random() * 9000);
+    const angkaStr = angka4D.toString();
+    const angka3D = angkaStr.slice(1);
+    const angka2D = angkaStr.slice(2);
+
+    const hasilBaru = {
+      angka4D,
+      angka3D,
+      angka2D
+    };
+
+    prediksiData[tanggalKey] = hasilBaru;
+    localStorage.setItem("prediksiHarian", JSON.stringify(prediksiData));
+    tampilkanPrediksi(hasilBaru);
+  }
+};
+
+
+    function updateResult() {
+      const angka = document.getElementById("inputResult").value.trim();
+      if (!/^\d{4}$/.test(angka)) {
+        alert("Mohon masukkan 4 digit angka.");
+        return;
+      }
+      document.getElementById("hasilManual").innerText = "Result: " + angka;
+      localStorage.setItem("resultManual", angka);
+    }
+
+    function resetSemuaData() {
+      if (confirm("Yakin ingin menghapus semua data?")) {
+        localStorage.removeItem("resultManual");
+        localStorage.removeItem("prediksiList");
+        document.getElementById("hasilManual").innerText = "Result: -";
+        document.getElementById("inputResult").value = "";
+        document.getElementById("prediksi4d").innerText = "";
+        document.getElementById("prediksi3d").innerText = "";
+        document.getElementById("prediksi2d").innerText = "";
+        document.getElementById("indikatorPrediksi").innerText = "";
+        currentIndex = 0;
+        document.getElementById("inputResult").focus();
+        alert("Semua data berhasil dihapus.");
+      }
+    }
+
+    function tampilkanPrediksi(data) {
+      if (!data) return;
+      document.getElementById("prediksi4d").innerText = "Prediksi 4D: " + data.angka4D;
+      document.getElementById("prediksi3d").innerText = "Prediksi 3D: " + data.angka3D;
+      document.getElementById("prediksi2d").innerText = "Prediksi 2D: " + data.angka2D;
+
+      const prediksiList = JSON.parse(localStorage.getItem("prediksiList")) || [];
+      document.getElementById("indikatorPrediksi").innerText =
+        `Menampilkan prediksi ke-${currentIndex + 1} dari ${prediksiList.length}`;
+    }
+
+    function prediksiSemua() {
+      const prediksiList = JSON.parse(localStorage.getItem("prediksiList")) || [];
+
+      if (prediksiList.length >= 3) {
+        alert("Kamu sudah mencapai batas maksimal 3 prediksi.");
+        return;
+      }
+
+      const angka4D = Math.floor(1000 + Math.random() * 9000);
+      const angkaStr = angka4D.toString();
+      const angka3D = angkaStr.slice(1);
+      const angka2D = angkaStr.slice(2);
+
+      const hasilBaru = {
+        angka4D,
+        angka3D,
+        angka2D
+      };
+
+      prediksiList.push(hasilBaru);
+      localStorage.setItem("prediksiList", JSON.stringify(prediksiList));
+
+      currentIndex = prediksiList.length - 1;
+      tampilkanPrediksi(hasilBaru);
+      document.getElementById("prediksi4d").scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function navigasiPrediksi(arah) {
+      const prediksiList = JSON.parse(localStorage.getItem("prediksiList")) || [];
+      if (prediksiList.length === 0) return;
+
+      currentIndex += arah;
+      if (currentIndex < 0) currentIndex = 0;
+      if (currentIndex >= prediksiList.length) currentIndex = prediksiList.length - 1;
+
+      tampilkanPrediksi(prediksiList[currentIndex]);
+    }
+
+    function salinKeClipboard() {
+      const teks = ambilTeksPrediksi();
+      if (!teks) {
+        alert("Belum ada prediksi untuk disalin.");
+        return;
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(teks)
+          .then(() => alert("✅ Prediksi berhasil disalin ke clipboard!"))
+          .catch(err => alert("❌ Gagal menyalin teks: " + err));
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = teks;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          alert("✅ Prediksi berhasil disalin ke clipboard!");
+        } catch (err) {
+          alert("❌ Gagal menyalin teks.");
+        }
+        document.body.removeChild(textarea);
+      }
+    }
+
+    function ambilTeksPrediksi() {
+      const prediksi4d = document.getElementById("prediksi4d").innerText.trim();
+      const prediksi3d = document.getElementById("prediksi3d").innerText.trim();
+      const prediksi2d = document.getElementById("prediksi2d").innerText.trim();
+
+      if (!prediksi4d || !prediksi3d || !prediksi2d) return null;
+
+      return `🎯 ${prediksi4d}\n🎯 ${prediksi3d}\n🎯 ${prediksi2d}\n#PrediksiTogelHariIni`;
+    }
+
+    function hubungiWhatsappLangsung() {
+      const nomor = "62881037563566";
+      const pesan = "Halo, saya tertarik dengan prediksi togel hari ini!";
+      const url = `https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
